@@ -83,7 +83,7 @@ void WinogradConv<PRECISION(kFloat), PRECISION(kFloat)>::ReInitWhenNeeded() {
                         threads;
 
   workspace_size_ = (temp_size + new_input_size) * sizeof(float);
-
+  workspace_size_*=threads;
   //! update trans weights impl
   weights_.Resize({1, 1, 1, wino_iw * wino_iw * oc_pad * ic_pad});
   void* trans_tmp_ptr = malloc(sizeof(float) * wino_iw * wino_iw * oc * ic);
@@ -258,7 +258,7 @@ void WinogradConv<PRECISION(kInt8), OutType>::ReInitWhenNeeded() {
                         tmp_remain_trans_size_byte + tmp_trans_out_size_byte +
                         tmp_remain_trans_out_size_byte;
   workspace_size_ = (temp_size + new_input_size) * 2;
-
+  workspace_size_*=threads;
   weights_.Resize({1, 1, 1, wino_iw * wino_iw * oc_pad * ic_pad});
   void* trans_tmp_ptr = malloc(sizeof(int32_t) * wino_iw * wino_iw * oc * ic);
   auto weights_data_ = weights_.mutable_data<int16_t>();
